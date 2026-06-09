@@ -57,8 +57,14 @@ export async function fetchInsights(
     const leads = parseFloat(leadAction?.value || '0')
     const cpl = parseFloat(cplAction?.value || '0')
 
-    const hookRate = impressions > 0 ? (hookViews / impressions) * 100 : 0
-    const hookToLead = hookViews > 0 ? (leads / hookViews) * 100 : 0
+    // 3-second video plays = standard Meta "video_view" action
+    // Falls back to 2-sec continuous views if video_view not present
+    const videoViewAction = actions.find((a) => a.action_type === 'video_view')
+    const threeSecViews = parseFloat(videoViewAction?.value || '0')
+    const effectiveHookViews = threeSecViews > 0 ? threeSecViews : hookViews
+
+    const hookRate = impressions > 0 ? (effectiveHookViews / impressions) * 100 : 0
+    const hookToLead = effectiveHookViews > 0 ? (leads / effectiveHookViews) * 100 : 0
     const optInRate = linkClicks > 0 ? (leads / linkClicks) * 100 : 0
     const cpcLink = linkClicks > 0 ? spend / linkClicks : 0
 
@@ -79,7 +85,7 @@ export async function fetchInsights(
       linkCtr,
       cpcLink,
       optInRate,
-      hookViews,
+      hookViews: effectiveHookViews,
       hookRate,
       hookToLead,
     }
