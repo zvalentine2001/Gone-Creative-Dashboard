@@ -9,19 +9,6 @@ export interface Client {
   color: string
 }
 
-export interface MetaInsights {
-  spend: string
-  impressions: string
-  reach: string
-  frequency: string
-  ctr: string
-  cpc: string
-  cpm: string
-  leads: string
-  cost_per_lead: string
-  video_continuous_2_sec_watched_actions?: { action_type: string; value: string }[]
-}
-
 export interface CampaignInsights {
   id: string
   name: string
@@ -30,12 +17,18 @@ export interface CampaignInsights {
   impressions: number
   reach: number
   frequency: number
-  ctr: number
-  cpc: number
+  ctr: number          // CTR All
+  cpc: number          // CPC All
   cpm: number
   leads: number
   cpl: number
-  hookRate: number
+  linkClicks: number
+  linkCtr: number      // Link CTR (inline_link_click_ctr)
+  cpcLink: number      // CPC Link (spend / linkClicks)
+  optInRate: number    // leads / linkClicks * 100
+  hookViews: number    // 2-sec video views
+  hookRate: number     // hookViews / impressions * 100
+  hookToLead: number   // leads / hookViews * 100
 }
 
 export interface ClientMetricsSummary {
@@ -47,11 +40,20 @@ export interface ClientMetricsSummary {
   ctr: number
   cpc: number
   cpm: number
+  linkClicks: number
+  linkCtr: number
+  cpcLink: number
+  optInRate: number
   hookRate: number
+  hookToLead: number
+  // Trends
   cplTrend: Trend
   frequencyTrend: Trend
   ctrTrend: Trend
   hookRateTrend: Trend
+  hookToLeadTrend: Trend
+  linkCtrTrend: Trend
+  optInRateTrend: Trend
   spendTrend: Trend
 }
 
